@@ -3,3 +3,5 @@ matplotlib
 fredapi
 python-dotenv
 jupyter
+streamlit
+plotly
