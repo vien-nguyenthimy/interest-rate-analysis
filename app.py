@@ -19,10 +19,7 @@ START_DATE = "2000-01-01"
 CACHE_TTL_SECONDS = 6 * 60 * 60
 
 
-st.set_page_config(
-    page_title="U.S. Real Interest Rate Dashboard",
-    layout="wide",
-)
+st.set_page_config(page_title="U.S. Real Interest Rate Dashboard",layout="wide",)
 
 
 def get_fred_api_key() -> str:
@@ -48,14 +45,8 @@ def get_fred_api_key() -> str:
     return api_key
 
 
-@st.cache_data(
-    ttl=CACHE_TTL_SECONDS,
-    show_spinner=False,
-)
-def load_dashboard_data(
-    _api_key: str,
-    start_date: str,
-):
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False,)
+def load_dashboard_data(_api_key: str, start_date: str,):
     """
     Load FRED data and calculate the estimated real interest rate.
 
@@ -78,12 +69,7 @@ def load_dashboard_data(
 
     fetched_at = datetime.now(timezone.utc)
 
-    return (
-        nominal_df,
-        expected_df,
-        analysis_df,
-        fetched_at,
-    )
+    return (nominal_df, expected_df, analysis_df, fetched_at,)
 
 
 def format_month(date: pd.Timestamp) -> str:
@@ -136,16 +122,11 @@ selected_start_date = st.sidebar.date_input(
     max_value=analysis_df.index.max().date(),
 )
 
-filtered_df = analysis_df.loc[
-    analysis_df.index
-    >= pd.Timestamp(selected_start_date)
-].copy()
+filtered_df = analysis_df.loc[analysis_df.index >= pd.Timestamp(selected_start_date)].copy()
 
 
 # Dashboard title
-st.title(
-    "U.S. Nominal and Estimated Real Interest Rates"
-)
+st.title("U.S. Nominal and Estimated Real Interest Rates")
 
 st.write(
     "Three-month U.S. Treasury bill rate and estimated "
@@ -160,9 +141,7 @@ data_status = get_data_status(
     analysis_df=analysis_df,
 )
 
-latest_metrics = get_latest_metrics(
-    analysis_df=analysis_df
-)
+latest_metrics = get_latest_metrics(analysis_df=analysis_df)
 
 
 # Metric cards
@@ -220,11 +199,7 @@ status_column_3.write(
     "**Latest common observation**"
 )
 
-status_column_3.write(
-    format_month(
-        data_status["analysis_latest"]
-    )
-)
+status_column_3.write(format_month(data_status["analysis_latest"]))
 
 
 # Explain mismatched latest months
