@@ -47,7 +47,7 @@ real_rate_approx = nominal_rate - expected_inflation
 The exact real interest rate is calculated as:
 
 $$
-r=\frac{1+i}{1+\πᵉ}-1
+r=\frac{1+i}{1+πᵉ}-1
 $$
 
 Because the original data are expressed in percentages, the Python calculation is:
