@@ -33,7 +33,7 @@ where:
 The main estimated real interest rate is calculated as:
 
 $$
-r = i -  πᵉ
+r \approx i-\pi^e
 $$
 
 In Python:
