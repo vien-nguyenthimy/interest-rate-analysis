@@ -1,4 +1,4 @@
-# U.S. Real Interest Rate Analysis
+# Interest Rate Analysis
 
 A Streamlit dashboard for analyzing the U.S. nominal interest rate and estimating the ex-ante real interest rate from 2000 to the latest available monthly observation.
 
