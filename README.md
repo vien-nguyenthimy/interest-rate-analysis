@@ -1,8 +1,12 @@
 # Interest Rate Analysis
 
-A Streamlit dashboard for analyzing the U.S. nominal interest rate and estimating the ex-ante real interest rate from 2000 to the latest available monthly observation.
+A Streamlit dashboard for exploring U.S. interest rates and estimating the
+ex-ante real interest rate from January 2000 to the latest available monthly
+observation.
 
-The project is inspired by the real and nominal interest rate chart presented in *The Economics of Money, Banking, and Financial Markets* by Frederic S. Mishkin.
+The project retrieves data from FRED, applies the Fisher equation, and presents
+the results through interactive Plotly charts, summary metrics, monthly tables,
+and downloadable CSV files.
 
 ## Project objective
 
@@ -13,6 +17,45 @@ The project aims to answer the following questions:
 - During which periods was the estimated real interest rate negative?
 - How different are the approximate and exact Fisher equations?
 - How can the dashboard automatically incorporate newly released monthly data?
+
+## Dashboard views
+
+The sidebar allows users to switch between two views.
+
+### Real Interest Rate
+
+This view compares:
+
+- the nominal three-month Treasury bill rate; and
+- the estimated ex-ante real interest rate.
+
+Its monthly table includes the nominal rate, expected inflation, approximate
+real rate, exact real rate, and a negative-real-rate indicator. The Fisher
+methodology and its limitations are displayed only in this view.
+
+### Expected Inflation
+
+This view compares:
+
+- the three-month Treasury bill rate; and
+- one-year expected inflation.
+
+Its monthly table contains only the fields relevant to the chart: month,
+nominal interest rate, and expected inflation.
+
+## Main features
+
+- Retrieve the latest monthly observations from FRED
+- Switch between two charts from the sidebar
+- Select a custom chart start date
+- Display the latest common observation and summary metrics
+- Identify differences in data availability between the two FRED series
+- Calculate approximate and exact real interest rates
+- Identify months with a negative estimated real interest rate
+- Display a table relevant to the selected chart
+- Download only the data relevant to the selected chart
+- Refresh FRED data manually
+- Cache API responses for six hours
 
 ## Methodology
 
@@ -90,43 +133,69 @@ Sources:
 
 Both series are retrieved automatically through the FRED API.
 
-## Dashboard features
+## Important limitation
 
-- Retrieve the latest monthly data from FRED
-- Select a custom analysis period
-- Display nominal and estimated real interest rates
-- Show a zero-interest reference line
-- Identify periods with negative real interest rates
-- Compare approximate and exact Fisher calculations
-- Display the latest available observations
-- Download the processed dataset as a CSV file
-- Refresh data when new observations become available
+`TB3MS` has a three-month maturity, while `EXPINF1YR` represents expected
+inflation over a one-year horizon. The estimated real rate should therefore be
+interpreted as an approximation rather than a perfectly maturity-matched real
+interest rate.
 
 ## Project structure
 
 ```text
-us-real-interest-rate-analysis/
+interest-rate-analysis/
 │
 ├── app.py
-├── requirements.txt
 ├── README.md
+├── requirements.txt
+├── requirements-dev.txt
 ├── .gitignore
 │
 ├── src/
 │   ├── __init__.py
+│   ├── config.py
 │   ├── data_loader.py
 │   ├── calculations.py
+│   ├── charts.py
+│   ├── formatters.py
+│   ├── dashboard_components.py
 │
 ├── data/
+│   ├── raw/
+│   │   ├── tb3ms_monthly.csv
+│   │   └── expected_inflation.csv
+│   └── processed/
+│       └── real_interest_rate_ex_ante.csv
+│
 ├── notebooks/
-└── outputs/
+│   └── fed_real_interest_rate.ipynb
+│
+├── outputs/
+    └── *.png
 ```
 
-Main files:
+### Main modules
 
-- `app.py`: Streamlit dashboard interface
-- `src/data_loader.py`: retrieves and cleans FRED data
-- `src/calculations.py`: joins the series and calculates real interest rates
+| File | Responsibility |
+|---|---|
+| `app.py` | Coordinates data loading, sidebar controls, filtering, and dashboard rendering |
+| `src/config.py` | Stores shared settings and FRED series configuration |
+| `src/data_loader.py` | Retrieves and cleans FRED data |
+| `src/calculations.py` | Joins the series and calculates real interest rates |
+| `src/charts.py` | Builds reusable Plotly figures |
+| `src/formatters.py` | Prepares chart-specific tables and CSV files |
+| `src/dashboard_components.py` | Renders Streamlit dashboard sections |
+
+The main application flow is:
+
+```text
+app.py
+  → data_loader.py
+  → calculations.py
+  → dashboard_components.py
+      → charts.py
+      → formatters.py
+```
 
 ## Installation
 
@@ -134,16 +203,23 @@ Main files:
 
 ```bash
 git clone https://github.com/vien-nguyenthimy/us-real-interest-rate-analysis.git
-cd us-real-interest-rate-analysis
+cd interest-rate-analysis
 ```
 
 ### 2. Create a virtual environment
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
+```
+
+macOS or Linux:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
 ```
 
 ### 3. Install the required libraries
@@ -162,9 +238,8 @@ FRED_API_KEY=your_fred_api_key
 
 The `.env` file is excluded from Git through `.gitignore` and must never be committed to GitHub.
 
-You can request a FRED API key from:
-
-https://fredaccount.stlouisfed.org/apikeys
+You can request an API key from the
+[FRED website](https://fredaccount.stlouisfed.org/apikeys).
 
 ### 5. Run the Streamlit application
 

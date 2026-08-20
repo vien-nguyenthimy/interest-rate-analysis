@@ -20,22 +20,6 @@ def fetch_fred_series(
     column_name: str,
     start_date: str = "2000-01-01",
 ) -> pd.DataFrame:
-    """
-    Download one FRED series and convert it into a clean DataFrame.
-
-    Parameters
-    ----------
-    fred: An authenticated FRED client.
-    series_id: The FRED identifier of the requested series.
-    column_name: The name assigned to the value column.
-    start_date: First observation date in YYYY-MM-DD format.
-
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame with a DatetimeIndex named ``date`` and one value column.
-    """
-
     try: # Python hãy thử gọi FRED. Nếu xảy ra lỗi thì thông báo rằng không thể lấy chuỗi nào
         series = fred.get_series(
             series_id,
@@ -73,21 +57,6 @@ def load_interest_rate_data(
     api_key: str, # FRED API key
     start_date: str = "2000-01-01", # Ngày bắt đầu lấy dữ liệu
 ) -> Dict[str, pd.DataFrame]:
-    """
-    Load the nominal interest-rate and expected-inflation series.
-
-    Parameters
-    ----------
-    api_key: FRED API key.
-    start_date: First observation date in YYYY-MM-DD format.
-
-    Returns
-    -------
-    Dict[str, pd.DataFrame]
-        Dictionary containing separate nominal-rate and
-        expected-inflation DataFrames.
-    """
-
     if not api_key or not api_key.strip(): # Nếu không có API key hợp lệ thì báo lỗi
         raise ValueError("A valid FRED API key is required.")
 
